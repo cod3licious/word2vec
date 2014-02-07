@@ -1,3 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Original parts taken from gensim:
+# Copyright (C) 2013 Radim Rehurek <me@radimrehurek.com>
+# Licensed under the GNU LGPL v2.1 - http://www.gnu.org/licenses/lgpl.html
+#
+# Added parts by Franziska Horn <cod3licious@gmail.com>
+# Not yet licensed under anything. Feel free to use for whatever except military,
+# NSA, and related stuff
+
 from copy import deepcopy
 from numpy import random
 import numpy as np

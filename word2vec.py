@@ -3,7 +3,8 @@
 #
 # Copyright (C) 2013 Radim Rehurek <me@radimrehurek.com>
 # Licensed under the GNU LGPL v2.1 - http://www.gnu.org/licenses/lgpl.html
-
+#
+# Added parts by Franziska Horn <cod3licious@gmail.com>
 
 """
 Deep learning via word2vec's "hierarchical softmax skip-gram model" [1]_.
@@ -62,7 +63,7 @@ from numpy import dot, random, dtype, get_include, float32 as REAL,\
 logger = logging.getLogger("word2vec.word2vec")
 import utils  # utility fnc for pickling, common scipy operations etc
 
-MODEL = 'skipgram' # 'skipgram' or 'cbow' or ...
+MODEL = 'cbow' # 'skipgram' or 'cbow' or ...
 TRAINING = 'negsam' # 'hsoftm' or 'negsam'
 
 if MODEL == 'skipgram':

@@ -3,7 +3,7 @@ README
 This is an extension / modification of the gensim word2vec python port (see here: http://radimrehurek.com/gensim/ and here: http://radimrehurek.com/2013/09/deep-learning-with-word2vec-and-gensim/).
 
 This code is still under construction, it comes as is, with absolutely no warranty, etc.
-I'm not quite sure about licenses and stuff but feel free to use this code for whatever you want except military, NSA, and related purposes.
+I'm not quite sure about licenses and stuff; the original code by Radim is licensed under the GNU LGPL v2.1 - http://www.gnu.org/licenses/lgpl.html, for my parts, please don't use them for military, NSA, and related purposes.
 
 While this code is a derivative of the gensim word2vec code, it is actually detached from it (but it should be pretty easy to integrate the relevant parts back in). It consists of 3 parts
 - utils.py simply includes the utils and matutils functions needed from gensim.
