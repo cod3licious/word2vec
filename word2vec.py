@@ -82,13 +82,34 @@ class Word2Vec():
     def reset_weights(self):
         """
         Reset all projection weights to an initial (untrained) state, but keep the existing vocabulary.
-        """
-        # weights
-        self.syn1 = np.zeros((len(self.vocab), self.embed_dim))
-        self.syn1neg = np.zeros((len(self.vocab), self.embed_dim))
-        # embedding
+        """        
         np.random.seed(self.seed)
-        self.syn0 = (np.random.rand(len(self.vocab), self.embed_dim) - 0.5) / self.embed_dim
+        # weights
+        self.syn1 = np.asarray(
+                        np.random.uniform(
+                            low=-4*np.sqrt(6. / (len(self.vocab) + self.embed_dim)),
+                            high=4*np.sqrt(6. / (len(self.vocab) + self.embed_dim)),
+                            size=(len(self.vocab), self.embed_dim)
+                        ),
+                        dtype=float
+                    )
+        self.syn1neg = np.asarray(
+                            np.random.uniform(
+                                low=-4*np.sqrt(6. / (len(self.vocab) + self.embed_dim)),
+                                high=4*np.sqrt(6. / (len(self.vocab) + self.embed_dim)),
+                                size=(len(self.vocab), self.embed_dim)
+                            ),
+                            dtype=float
+                        )
+        # embedding        
+        self.syn0 = np.asarray(
+                        np.random.uniform(
+                            low=-4*np.sqrt(6. / (len(self.vocab) + self.embed_dim)),
+                            high=4*np.sqrt(6. / (len(self.vocab) + self.embed_dim)),
+                            size=(len(self.vocab), self.embed_dim)
+                        ),
+                        dtype=float
+                    )#(np.random.rand(len(self.vocab), self.embed_dim) - 0.5) / self.embed_dim
         self.syn0norm = None
 
     def _make_table(self, table_size=100000000., power=0.75):
@@ -215,10 +236,12 @@ class Word2Vec():
         for pos, word in enumerate(sentence):
             if not word or (word.prob and word.prob < np.random.rand()):
                 continue  # OOV word in the input sentence or subsampling => skip
-            reduced_window = np.random.randint(self.window)
+            reduced_window = np.random.randint(self.window-1)
             # now go over all words from the (reduced) window (at once), predicting each one in turn
             start = max(0, pos - self.window + reduced_window)
             word2_indices = [word2.index for pos2, word2 in enumerate(sentence[start:pos+self.window+1-reduced_window], start) if (word2 and not (pos2 == pos))]
+            if not word2_indices:
+                continue
             l1 = deepcopy(self.syn0[word2_indices]) # len(word2_indices) x layer1_size
             if self.hs:
                 # work on the entire tree at once --> 2d matrix, codelen x layer1_size
@@ -265,11 +288,14 @@ class Word2Vec():
         for pos, word in enumerate(sentence):
             if not word or (word.prob and word.prob < np.random.rand()):
                 continue  # OOV word in the input sentence or subsampling => skip
-            reduced_window = np.random.randint(self.window) # how much is SUBSTRACTED from the original window
-            # get sum of representation from all words in the (reduced) window (if in vocab and not the `word` itself)
+            reduced_window = np.random.randint(self.window-1) # how much is SUBSTRACTED from the original window
+            # get mean of representation from all words in the (reduced) window (if in vocab and not the `word` itself)
             start = max(0, pos - self.window + reduced_window)
             word2_indices = [word2.index for pos2, word2 in enumerate(sentence[start:pos+self.window+1-reduced_window], start) if (word2 and not (pos2 == pos))]
-            l1 = np.sum(self.syn0[word2_indices],axis=0) # 1xlayer1_size
+            if not word2_indices:
+                # in this case the sum would return zeros, the mean nans but really no point in doing anything at all
+                continue
+            l1 = np.mean(self.syn0[word2_indices], axis=0) # 1xlayer1_size
             if self.hs:
                 # work on the entire tree at once --> 2d matrix, codelen x layer1_size
                 l2 = deepcopy(self.syn1[word.point])
