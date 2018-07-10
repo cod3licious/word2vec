@@ -1,5 +1,7 @@
 ## README
 
+
+**DEPRECATED**:
 check out [word2vec.py from the conec repo](https://github.com/cod3licious/conec/blob/master/conec/word2vec.py) instead!
 
 This is an extension / modification of the gensim word2vec python port (see here: http://radimrehurek.com/gensim/ and here: http://radimrehurek.com/2013/09/deep-learning-with-word2vec-and-gensim/).
